@@ -1,6 +1,7 @@
 import pygame
 import random
 import time
+from random import randint
 
 pygame.init()
 pygameDisplay = pygame.display
@@ -15,7 +16,7 @@ branco = (255,255,255)
 fundo = pygame.image.load("assets/fundostarwars.png")
 millenniumfalcon = pygame.image.load("assets/millenniumfalcon.png")
 missile = pygame.image.load("assets/missile.png")
-tieadvancedx1 = pygame.image.load("assets/TIEAdvancedX1.webp")
+tieadvancedx1 = pygame.image.load("assets/TIEAdvancedX1.png")
 lancaMissile = 0
 
 
@@ -41,6 +42,8 @@ def jogar():
     lancaMissile = 0
     millenniumX = 342
     millenniumY = 650
+    tieadvancedX = 0
+    tieadvancedY = 30
     movimentoMillenniumX = 0
     larguraMillennium = 125
     alturaMillennium = 125
@@ -49,8 +52,7 @@ def jogar():
     posicaoMissileX = 400
     posicaoMissileY = 610
     velocidadeMissile = 10
-    pontos = 0
-    theme = pygame.mixer.music.load("assets/starwarstheme.mp3")
+    pygame.mixer.music.load("assets/starwarstheme.mp3")
     pygame.mixer.music.play(-1)
     pygame.mixer.music.set_volume(-1)
 
@@ -96,24 +98,28 @@ def jogar():
 
             if millenniumX + movimentoMillenniumX >0 and millenniumX + movimentoMillenniumX < largura - larguraMillennium:
                 millenniumX = millenniumX + movimentoMillenniumX
+                
             gameDisplay.fill(branco)
             gameDisplay.blit(fundo,(0,0))
             gameDisplay.blit(millenniumfalcon, (millenniumX,millenniumY))
             
+            tieadvancedX = randint(70,640)          
+            gameDisplay.blit(tieadvancedx1, (tieadvancedX,tieadvancedY))
+        
+            
             gameDisplay.blit(missile, (posicaoMissileX,posicaoMissileY))
-            escreverTexto("Pontos: "+str(pontos))
 
-            pixelsXIron = list(range(millenniumX, millenniumX+larguraMillennium))
-            pixelsYIron = list(range(millenniumY, millenniumY+alturaMillennium))
+            pixelsXMillennium = list(range(millenniumX, millenniumX+larguraMillennium))
+            pixelsYMillenium = list(range(millenniumY, millenniumY+alturaMillennium))
 
             pixelXMissile = list(range(posicaoMissileX, posicaoMissileX+larguraMissile))
             pixelYMissile = list(range(posicaoMissileY, posicaoMissileY+alturaMissile))
 
-            colisaoY = len(list(set(pixelYMissile) & set(pixelsYIron) ))
+            colisaoY = len(list(set(pixelYMissile) & set(pixelsYMillenium) ))
             
             
             if colisaoY > 0:
-                colisaoX = len(list(set(pixelXMissile) & set(pixelsXIron) ))
+                colisaoX = len(list(set(pixelXMissile) & set(pixelsXMillennium) ))
                 print(colisaoX)
                 if colisaoX > 45:
                     morreu()
