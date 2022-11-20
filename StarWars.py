@@ -16,6 +16,7 @@ fundo = pygame.image.load("assets/fundostarwars.png")
 millenniumfalcon = pygame.image.load("assets/millenniumfalcon.png")
 missile = pygame.image.load("assets/missile.png")
 tieadvancedx1 = pygame.image.load("assets/TIEAdvancedX1.webp")
+lancaMissile = 0
 
 
 
@@ -37,6 +38,7 @@ def morreu():
 
 def jogar():
     jogando = True
+    lancaMissile = 0
     millenniumX = 342
     millenniumY = 650
     movimentoMillenniumX = 0
@@ -47,15 +49,13 @@ def jogar():
     posicaoMissileX = 400
     posicaoMissileY = 610
     velocidadeMissile = 10
-    lancaMissile = 0
     pontos = 0
-    pygame.mixer.music.load("assets/starwarstheme.mp3")
+    theme = pygame.mixer.music.load("assets/starwarstheme.mp3")
     pygame.mixer.music.play(-1)
     pygame.mixer.music.set_volume(-1)
 
-    missileSound = pygame.mixer.Sound("assets/missile.wav")
+    missileSound = pygame.mixer.Sound("assets/missile.mp3")
     missileSound.set_volume(1)
-    pygame.mixer.Sound.play(missileSound)
 
     explosaoSound = pygame.mixer.Sound("assets/explosao.wav")
     explosaoSound.set_volume(1)
@@ -72,25 +72,27 @@ def jogar():
                     movimentoMillenniumX = -15
                 elif event.key == pygame.K_RIGHT:
                     movimentoMillenniumX = 15
-                elif event.key == pygame.K_BACKSPACE:
+                elif event.key == pygame.K_m:
                     lancaMissile = 1
                 elif event.key == pygame.K_RETURN:
                     jogar()
             elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_BACKSPACE:
-                    lancaMissile = 0
-            movimentoMillenniumX = 0
+                movimentoMillenniumX = 0
                 
                 
             
         if jogando:
-            if posicaoMissileY < 0 and lancaMissile == 1:
-                posicaoMissileY = 610
+            if lancaMissile == 0:
                 posicaoMissileX = millenniumX + 55
-                pontos = pontos + 1
-                pygame.mixer.Sound.play(missileSound)
             else:
+                pygame.mixer.Sound.play(missileSound)
                 posicaoMissileY = posicaoMissileY - velocidadeMissile
+                if posicaoMissileY <0:
+                    posicaoMissileX = millenniumX + 55
+                    lancaMissile = 0
+                    posicaoMissileY = 610
+                        
+                
 
             if millenniumX + movimentoMillenniumX >0 and millenniumX + movimentoMillenniumX < largura - larguraMillennium:
                 millenniumX = millenniumX + movimentoMillenniumX
@@ -117,7 +119,6 @@ def jogar():
                     morreu()
                     jogando=False
                     pygame.mixer.music.stop()
-                    pygame.mixer.Sound.play(explosaoSound)
 
 
         pygameDisplay.update()
