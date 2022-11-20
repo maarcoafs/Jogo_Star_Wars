@@ -4,7 +4,7 @@ import time
 
 pygame.init()
 pygameDisplay = pygame.display
-pygameDisplay.set_caption("Iron Man do Marcão")
+pygameDisplay.set_caption("Jogo Star Wars")
 altura = 811
 largura = 811
 tamanho = (largura, altura)
@@ -37,16 +37,17 @@ def morreu():
 
 def jogar():
     jogando = True
-    millenniumX = 250
+    millenniumX = 342
     millenniumY = 650
-    movimentoIronX = 0
-    larguraIron = 120
-    alturaIron = 110
-    alturaMissile = 250
-    larguraMissile = 50
+    movimentoMillenniumX = 0
+    larguraMillennium = 125
+    alturaMillennium = 125
+    alturaMissile = 80
+    larguraMissile = 17
     posicaoMissileX = 400
-    posicaoMissileY = -240
-    velocidadeMissile = 1
+    posicaoMissileY = 610
+    velocidadeMissile = 10
+    lancaMissile = 0
     pontos = 0
     pygame.mixer.music.load("assets/starwarstheme.mp3")
     pygame.mixer.music.play(-1)
@@ -58,6 +59,9 @@ def jogar():
 
     explosaoSound = pygame.mixer.Sound("assets/explosao.wav")
     explosaoSound.set_volume(1)
+    
+    
+    
     while True:
         for event in gameEvents.get():
             if event.type == pygame.QUIT:
@@ -65,26 +69,31 @@ def jogar():
                 quit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    movimentoIronX = -15
+                    movimentoMillenniumX = -15
                 elif event.key == pygame.K_RIGHT:
-                    movimentoIronX = 15
+                    movimentoMillenniumX = 15
+                elif event.key == pygame.K_BACKSPACE:
+                    lancaMissile = 1
                 elif event.key == pygame.K_RETURN:
                     jogar()
             elif event.type == pygame.KEYUP:
-                movimentoIronX = 0
+                if event.key == pygame.K_BACKSPACE:
+                    lancaMissile = 0
+            movimentoMillenniumX = 0
+                
+                
             
         if jogando:
-            if posicaoMissileY > altura:
-                posicaoMissileY = -240
-                posicaoMissileX = random.randint(0,largura)
-                #velocidadeMissile = velocidadeMissile + 1
+            if posicaoMissileY < 0 and lancaMissile == 1:
+                posicaoMissileY = 610
+                posicaoMissileX = millenniumX + 55
                 pontos = pontos + 1
                 pygame.mixer.Sound.play(missileSound)
             else:
-                posicaoMissileY =posicaoMissileY + velocidadeMissile
+                posicaoMissileY = posicaoMissileY - velocidadeMissile
 
-            if millenniumX + movimentoIronX >0 and millenniumX + movimentoIronX< largura-larguraIron:
-                millenniumX = millenniumX + movimentoIronX
+            if millenniumX + movimentoMillenniumX >0 and millenniumX + movimentoMillenniumX < largura - larguraMillennium:
+                millenniumX = millenniumX + movimentoMillenniumX
             gameDisplay.fill(branco)
             gameDisplay.blit(fundo,(0,0))
             gameDisplay.blit(millenniumfalcon, (millenniumX,millenniumY))
@@ -92,13 +101,15 @@ def jogar():
             gameDisplay.blit(missile, (posicaoMissileX,posicaoMissileY))
             escreverTexto("Pontos: "+str(pontos))
 
-            pixelsXIron = list(range(millenniumX, millenniumX+larguraIron))
-            pixelsYIron = list(range(millenniumY, millenniumY+alturaIron))
+            pixelsXIron = list(range(millenniumX, millenniumX+larguraMillennium))
+            pixelsYIron = list(range(millenniumY, millenniumY+alturaMillennium))
 
             pixelXMissile = list(range(posicaoMissileX, posicaoMissileX+larguraMissile))
             pixelYMissile = list(range(posicaoMissileY, posicaoMissileY+alturaMissile))
 
             colisaoY = len(list(set(pixelYMissile) & set(pixelsYIron) ))
+            
+            
             if colisaoY > 0:
                 colisaoX = len(list(set(pixelXMissile) & set(pixelsXIron) ))
                 print(colisaoX)
